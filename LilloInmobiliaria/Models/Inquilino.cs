@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace LilloInmobiliaria.Models
 {
-    public class Propietario
+    public class Inquilino
     {
-        public int IdPropietario { get; set; }
+        public int IdInquilino { get; set; }
 
         public String Nombre { get; set; }
 
@@ -19,14 +19,9 @@ namespace LilloInmobiliaria.Models
 
         public String Email { get; set; }
 
-        public String Clave { get; set; }
-
         public override string ToString()
         {
-            return $"{IdPropietario} {Nombre} {Apellido} {Dni} {Telefono} {Email}";
+            return $"{IdInquilino} {Nombre} {Apellido} {Dni} {Telefono} {Email}";
         }
-
-
-
     }
 }
