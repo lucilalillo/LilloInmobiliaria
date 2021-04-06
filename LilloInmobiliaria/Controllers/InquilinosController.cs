@@ -11,24 +11,38 @@ namespace LilloInmobiliaria.Controllers
 {
     public class InquilinosController : Controller
     {
-        private readonly IRepositorio<Inquilino> repositorio;
+        private readonly RepositorioInquilino repositorio;
+        private readonly IConfiguration config;
 
         public InquilinosController(IConfiguration config)
         {
             this.repositorio = new RepositorioInquilino(config);
+            this.config = config;
         }
 
         // GET: Inquilino
         public ActionResult Index()
         {
-            var lista = repositorio.ObtenerTodos();
-            return View(lista);
+            try
+            {
+                var lista = repositorio.ObtenerTodos();
+                ViewBag.Id = TempData["Id"];
+                if (TempData.ContainsKey("Mensaje"))
+                    ViewBag.Mensaje = TempData["Mensaje"];
+                return View(lista);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
 
         // GET: Inquilino/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            Inquilino i = new Inquilino();
+            i = repositorio.ObtenerPorId(id);
+            return View(i);
         }
 
         // GET: Inquilino/Create
@@ -40,14 +54,14 @@ namespace LilloInmobiliaria.Controllers
         // POST: Inquilino/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Inquilino propietario)
+        public ActionResult Create(Inquilino inquilino)
         {
             try
             {
-                TempData["Nombre"] = propietario.Nombre;
+                TempData["Nombre"] = inquilino.Nombre;
                 if (ModelState.IsValid)
                 {
-                    repositorio.Alta(propietario);
+                    repositorio.Alta(inquilino);
                     return RedirectToAction(nameof(Index));
                 }
                 else
@@ -62,7 +76,12 @@ namespace LilloInmobiliaria.Controllers
         // GET: Inquilino/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            var p = repositorio.ObtenerPorId(id);
+            if (TempData.ContainsKey("Mensaje"))
+                ViewBag.Mensaje = TempData["Mensaje"];
+            if (TempData.ContainsKey("Error"))
+                ViewBag.Error = TempData["Error"];
+            return View(p);
         }
 
         // POST: Inquilino/Edit/5
@@ -70,22 +89,36 @@ namespace LilloInmobiliaria.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, IFormCollection collection)
         {
+            Inquilino p = null;
             try
             {
-                // TODO: Add update logic here
-
+                p = repositorio.ObtenerPorId(id);
+                p.Nombre = collection["Nombre"];
+                p.Apellido = collection["Apellido"];
+                p.Dni = collection["Dni"];
+                p.Email = collection["Email"];
+                p.Telefono = collection["Telefono"];
+                repositorio.Modificacion(p);
+                TempData["Mensaje"] = "Datos guardados correctamente";
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                ViewBag.Error = ex.Message;
+                ViewBag.StackTrate = ex.StackTrace;
+                return View(p);
             }
         }
 
         // GET: Inquilino/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            var p = repositorio.ObtenerPorId(id);
+            if (TempData.ContainsKey("Mensaje"))
+                ViewBag.Mensaje = TempData["Mensaje"];
+            if (TempData.ContainsKey("Error"))
+                ViewBag.Error = TempData["Error"];
+            return View(p);
         }
 
         // POST: Inquilino/Delete/5
@@ -95,13 +128,15 @@ namespace LilloInmobiliaria.Controllers
         {
             try
             {
-                // TODO: Add delete logic here
-
+                repositorio.Baja(id);
+                TempData["Mensaje"] = "Eliminación realizada correctamente";
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                ViewBag.Error = ex.Message;
+                ViewBag.StackTrate = ex.StackTrace;
+                return View(collection);
             }
         }
     }

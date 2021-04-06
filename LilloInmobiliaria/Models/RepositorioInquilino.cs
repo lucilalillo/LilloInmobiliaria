@@ -44,7 +44,7 @@ namespace LilloInmobiliaria.Models
 			int res = -1;
 			using (SqlConnection connection = new SqlConnection(connectionString))
 			{
-				string sql = $"DELETE FROM Inquilinos WHERE IdPropieterio = {id}";
+				string sql = $"DELETE FROM Inquilinos WHERE IdInquilinos = {id}";
 				using (SqlCommand command = new SqlCommand(sql, connection))
 				{
 					command.CommandType = CommandType.Text;
@@ -61,8 +61,8 @@ namespace LilloInmobiliaria.Models
 			using (SqlConnection connection = new SqlConnection(connectionString))
 			{
 				string sql = $"UPDATE Inquilinos SET " +
-					$"Nombre=@nombre', Apellido=@apellido, Dni=@dni, Telefono=@telefono, Email=@email " +
-					$"WHERE IdInquilino = @idInquilino";
+					$"Nombre=@nombre, Apellido=@apellido, Dni=@dni, Telefono=@telefono, Email=@email " +
+					$"WHERE IdInquilinos = @idInquilino";
 				using (SqlCommand command = new SqlCommand(sql, connection))
 				{
 					command.CommandType = CommandType.Text;
@@ -85,7 +85,7 @@ namespace LilloInmobiliaria.Models
 			IList<Inquilino> res = new List<Inquilino>();
 			using (SqlConnection connection = new SqlConnection(connectionString))
 			{
-				string sql = $"SELECT IdInquilino, Nombre, Apellido, Dni, Telefono, Email" +
+				string sql = $"SELECT IdInquilinos, Nombre, Apellido, Dni, Telefono, Email" +
 					$" FROM Inquilinos" +
 					$" ORDER BY Apellido, Nombre";/* +
 					$" OFFSET 0 ROWS " +
@@ -119,8 +119,8 @@ namespace LilloInmobiliaria.Models
 			Inquilino p = null;
 			using (SqlConnection connection = new SqlConnection(connectionString))
 			{
-				string sql = $"SELECT IdInquilino, Nombre, Apellido, Dni, Telefono, Email FROM Inquilinos" +
-					$" WHERE IdInquilino=@id";
+				string sql = $"SELECT IdInquilinos, Nombre, Apellido, Dni, Telefono, Email FROM Inquilinos" +
+					$" WHERE IdInquilinos=@id";
 				using (SqlCommand command = new SqlCommand(sql, connection))
 				{
 					command.CommandType = CommandType.Text;

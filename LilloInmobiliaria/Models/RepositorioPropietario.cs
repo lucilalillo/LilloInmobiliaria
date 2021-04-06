@@ -20,7 +20,7 @@ namespace LilloInmobiliaria.Models
 			int res = -1;
 			using (SqlConnection connection = new SqlConnection(connectionString))
 			{
-				string sql = $"INSERT INTO Propietarios (Nombre, Apellido, Dni, Telefono, Email) " +
+				string sql = $"INSERT INTO propietarios (Nombre, Apellido, Dni, Telefono, Email) " +
 					$"VALUES (@nombre, @apellido, @dni, @telefono, @email)";
 				using (SqlCommand command = new SqlCommand(sql, connection))
 				{
@@ -44,7 +44,7 @@ namespace LilloInmobiliaria.Models
 			int res = -1;
 			using (SqlConnection connection = new SqlConnection(connectionString))
 			{
-				string sql = $"DELETE FROM Propietarios WHERE IdPropieterio = {id}";
+				string sql = $"DELETE FROM propietarios WHERE IdPropietario = {id}";
 				using (SqlCommand command = new SqlCommand(sql, connection))
 				{
 					command.CommandType = CommandType.Text;
@@ -60,9 +60,9 @@ namespace LilloInmobiliaria.Models
 			int res = -1;
 			using (SqlConnection connection = new SqlConnection(connectionString))
 			{
-				string sql = $"UPDATE Propietarios SET " +
-					$"Nombre=@nombre', Apellido=@apellido, Dni=@dni, Telefono=@telefono, Email=@email " +
-					$"WHERE IdPropietarios = @idPropietarios";
+				string sql = $"UPDATE propietarios SET " +
+					$"Nombre=@nombre, Apellido=@apellido, Dni=@dni, Telefono=@telefono, Email=@email " +
+					$"WHERE IdPropietario = @idPropietarios";
 				using (SqlCommand command = new SqlCommand(sql, connection))
 				{
 					command.CommandType = CommandType.Text;
@@ -71,7 +71,7 @@ namespace LilloInmobiliaria.Models
 					command.Parameters.AddWithValue("@dni", e.Dni);
 					command.Parameters.AddWithValue("@telefono", e.Telefono);
 					command.Parameters.AddWithValue("@email", e.Email);
-					command.Parameters.AddWithValue("@idInquilino", e.IdPropietario);
+					command.Parameters.AddWithValue("@idPropietarios", e.IdPropietario);
 					connection.Open();
 					res = command.ExecuteNonQuery();
 					connection.Close();
@@ -86,7 +86,7 @@ namespace LilloInmobiliaria.Models
 			using (SqlConnection connection = new SqlConnection(connectionString))
 			{
 				string sql = $"SELECT IdPropietario, Nombre, Apellido, Dni, Telefono, Email" +
-					$" FROM Propietarios" +
+					$" FROM propietarios" +
 					$" ORDER BY Apellido, Nombre";/* +
 					$" OFFSET 0 ROWS " +
 					$" FETCH NEXT 10 ROWS ONLY ";*/
@@ -119,8 +119,8 @@ namespace LilloInmobiliaria.Models
 			Propietario p = null;
 			using (SqlConnection connection = new SqlConnection(connectionString))
 			{
-				string sql = $"SELECT IdPropietario, Nombre, Apellido, Dni, Telefono, Email FROM Propietarios" +
-					$" WHERE IdPropietarios=@id";
+				string sql = $"SELECT IdPropietario, Nombre, Apellido, Dni, Telefono, Email FROM propietarios" +
+					$" WHERE IdPropietario=@id";
 				using (SqlCommand command = new SqlCommand(sql, connection))
 				{
 					command.CommandType = CommandType.Text;

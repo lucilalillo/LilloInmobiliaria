@@ -1,4 +1,4 @@
-﻿using LilloInmobiliaria.Models;
+﻿ using LilloInmobiliaria.Models;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -42,7 +42,9 @@ namespace LilloInmobiliaria.Controllers
         // GET: Propietario/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            Propietario p = new Propietario();
+            p = repositorio.ObtenerPorId(id);
+            return View(p);
         }
 
         // GET: Propietario/Busqueda
@@ -74,26 +76,18 @@ namespace LilloInmobiliaria.Controllers
         {
             try
             {
+                TempData["Nombre"] = propietario.Nombre;
                 if (ModelState.IsValid)
                 {
-                    propietario.Clave = Convert.ToBase64String(KeyDerivation.Pbkdf2(
-                        password: propietario.Clave,
-                        salt: System.Text.Encoding.ASCII.GetBytes(config["Salt"]),
-                        prf: KeyDerivationPrf.HMACSHA1,
-                        iterationCount: 1000,
-                        numBytesRequested: 256 / 8));
                     repositorio.Alta(propietario);
-                    TempData["Id"] = propietario.IdPropietario;
                     return RedirectToAction(nameof(Index));
                 }
                 else
-                    return View(propietario);
+                    return View();
             }
-            catch (Exception ex)
+            catch
             {
-                ViewBag.Error = ex.Message;
-                ViewBag.StackTrace = ex.StackTrace;
-                return View(propietario);
+                return View();
             }
         }
 
@@ -189,7 +183,7 @@ namespace LilloInmobiliaria.Controllers
         } */
 
         // GET: Propietario/Delete/5
-        public ActionResult Eliminar(int id)
+        public ActionResult Delete(int id)
         {
             var p = repositorio.ObtenerPorId(id);
             if (TempData.ContainsKey("Mensaje"))
@@ -202,7 +196,7 @@ namespace LilloInmobiliaria.Controllers
         // POST: Propietario/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Eliminar(int id, Propietario entidad)
+        public ActionResult Delete(int id, IFormCollection collection)
         {
             try
             {
@@ -214,7 +208,7 @@ namespace LilloInmobiliaria.Controllers
             {
                 ViewBag.Error = ex.Message;
                 ViewBag.StackTrate = ex.StackTrace;
-                return View(entidad);
+                return View(collection);
             }
         }
 
