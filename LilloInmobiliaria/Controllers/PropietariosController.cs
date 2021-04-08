@@ -129,9 +129,9 @@ namespace LilloInmobiliaria.Controllers
         }
 
         // POST: Propietario/Edit/5
-        [HttpPost]
+      /*  [HttpPost]
         [ValidateAntiForgeryToken]
-      /*  public ActionResult CambiarPass(int id, CambioClaveView cambio)
+        public ActionResult CambiarPass(int id, CambioClaveView cambio)
         {
             Propietario propietario = null;
             try
