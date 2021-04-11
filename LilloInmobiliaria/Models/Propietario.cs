@@ -19,7 +19,7 @@ namespace LilloInmobiliaria.Models
 
         public String Email { get; set; }
 
-        public String Clave { get; set; }
+        public String ClaveProp { get; set; }
 
         public override string ToString()
         {

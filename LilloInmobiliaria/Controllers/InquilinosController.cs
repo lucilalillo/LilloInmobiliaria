@@ -33,7 +33,9 @@ namespace LilloInmobiliaria.Controllers
             }
             catch (Exception ex)
             {
-                throw;
+                ViewBag.Error = ex.Message;
+                ViewBag.StackTrate = ex.StackTrace;
+                return View();
             }
         }
 
@@ -67,8 +69,10 @@ namespace LilloInmobiliaria.Controllers
                 else
                     return View();
             }
-            catch
+            catch(Exception ex)
             {
+                ViewBag.Error = ex.Message;
+                ViewBag.StackTrate = ex.StackTrace;
                 return View();
             }
         }

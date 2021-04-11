@@ -35,7 +35,9 @@ namespace LilloInmobiliaria.Controllers
             }
             catch (Exception ex)
             {
-                throw;
+                ViewBag.Error = ex.Message;
+                ViewBag.StackTrate = ex.StackTrace;
+                return View();
             }
         }
 
@@ -48,7 +50,7 @@ namespace LilloInmobiliaria.Controllers
         }
 
         // GET: Propietario/Busqueda
-        public IActionResult Busqueda()
+       /* public IActionResult Busqueda()
         {
             try
             {
@@ -58,7 +60,7 @@ namespace LilloInmobiliaria.Controllers
             {
                 throw ex;
             }
-        }
+        }*/
 
         
         
@@ -85,10 +87,13 @@ namespace LilloInmobiliaria.Controllers
                 else
                     return View();
             }
-            catch
+            catch (Exception ex)
             {
+                ViewBag.Error = ex.Message;
+                ViewBag.StackTrate = ex.StackTrace;
                 return View();
             }
+
         }
 
         // GET: Propietario/Edit/5

@@ -17,11 +17,13 @@ namespace LilloInmobiliaria.Models
 
 		public int Alta(Propietario e)
 		{
-			int res = -1;
+				int res = -1;
 			using (SqlConnection connection = new SqlConnection(connectionString))
 			{
-				string sql = $"INSERT INTO propietarios (Nombre, Apellido, Dni, Telefono, Email) " +
-					$"VALUES (@nombre, @apellido, @dni, @telefono, @email)";
+				string sql = $"INSERT INTO propietarios (Nombre, Apellido, Dni, Telefono, Email, ClaveProp) " +
+					$"VALUES (@nombre, @apellido, @dni, @telefono, @email, @claveprop);" +
+					$"SELECT SCOPE_IDENTITY();";
+
 				using (SqlCommand command = new SqlCommand(sql, connection))
 				{
 					command.CommandType = CommandType.Text;
@@ -30,14 +32,14 @@ namespace LilloInmobiliaria.Models
 					command.Parameters.AddWithValue("@dni", e.Dni);
 					command.Parameters.AddWithValue("@telefono", e.Telefono);
 					command.Parameters.AddWithValue("@email", e.Email);
+					command.Parameters.AddWithValue("@claveprop", e.ClaveProp);
 					connection.Open();
-					res = command.ExecuteNonQuery();
-					command.CommandText = "SELECT SCOPE_IDENTITY()";
-					e.IdPropietario = (int)command.ExecuteScalar();
+					res = Convert.ToInt32(command.ExecuteScalar());
+					e.IdPropietario = res;
 					connection.Close();
 				}
 			}
-			return res;
+		return res;
 		}
 		public int Baja(int id)
 		{
@@ -61,7 +63,7 @@ namespace LilloInmobiliaria.Models
 			using (SqlConnection connection = new SqlConnection(connectionString))
 			{
 				string sql = $"UPDATE propietarios SET " +
-					$"Nombre=@nombre, Apellido=@apellido, Dni=@dni, Telefono=@telefono, Email=@email " +
+					$"Nombre=@nombre, Apellido=@apellido, Dni=@dni, Telefono=@telefono, Email=@email, ClaveProp=@claveprop " +
 					$"WHERE IdPropietario = @idPropietarios";
 				using (SqlCommand command = new SqlCommand(sql, connection))
 				{
@@ -71,6 +73,7 @@ namespace LilloInmobiliaria.Models
 					command.Parameters.AddWithValue("@dni", e.Dni);
 					command.Parameters.AddWithValue("@telefono", e.Telefono);
 					command.Parameters.AddWithValue("@email", e.Email);
+					command.Parameters.AddWithValue("@claveprop", e.ClaveProp);
 					command.Parameters.AddWithValue("@idPropietarios", e.IdPropietario);
 					connection.Open();
 					res = command.ExecuteNonQuery();

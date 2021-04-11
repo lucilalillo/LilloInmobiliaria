@@ -20,8 +20,9 @@ namespace LilloInmobiliaria.Models
 			int res = -1;
 			using (SqlConnection connection = new SqlConnection(connectionString))
 			{
-				string sql = $"INSERT INTO Inquilinos (Nombre, Apellido, Dni, Telefono, Email) " +
-					$"VALUES (@nombre, @apellido, @dni, @telefono, @email)";
+				string sql = $"INSERT INTO Inquilinos (Nombre, Apellido, Dni, Telefono, Email, ClaveInq) " +
+					$"VALUES (@nombre, @apellido, @dni, @telefono, @email, @claveinq);" +
+					$"SELECT SCOPE_IDENTITY();";
 				using (SqlCommand command = new SqlCommand(sql, connection))
 				{
 					command.CommandType = CommandType.Text;
@@ -30,10 +31,10 @@ namespace LilloInmobiliaria.Models
 					command.Parameters.AddWithValue("@dni", e.Dni);
 					command.Parameters.AddWithValue("@telefono", e.Telefono);
 					command.Parameters.AddWithValue("@email", e.Email);
+					command.Parameters.AddWithValue("@claveinq", e.ClaveInq);
 					connection.Open();
-					res = command.ExecuteNonQuery();
-					command.CommandText = "SELECT SCOPE_IDENTITY()";
-					e.IdInquilino = (int)command.ExecuteScalar();
+					res = Convert.ToInt32(command.ExecuteScalar());
+					e.IdInquilino = res;
 					connection.Close();
 				}
 			}
@@ -61,7 +62,7 @@ namespace LilloInmobiliaria.Models
 			using (SqlConnection connection = new SqlConnection(connectionString))
 			{
 				string sql = $"UPDATE Inquilinos SET " +
-					$"Nombre=@nombre, Apellido=@apellido, Dni=@dni, Telefono=@telefono, Email=@email " +
+					$"Nombre=@nombre, Apellido=@apellido, Dni=@dni, Telefono=@telefono, Email=@email, ClaveInq=@claveinq " +
 					$"WHERE IdInquilinos = @idInquilino";
 				using (SqlCommand command = new SqlCommand(sql, connection))
 				{
@@ -71,6 +72,7 @@ namespace LilloInmobiliaria.Models
 					command.Parameters.AddWithValue("@dni", e.Dni);
 					command.Parameters.AddWithValue("@telefono", e.Telefono);
 					command.Parameters.AddWithValue("@email", e.Email);
+					command.Parameters.AddWithValue("@claveinq", e.ClaveInq);
 					command.Parameters.AddWithValue("@idInquilino", e.IdInquilino);
 					connection.Open();
 					res = command.ExecuteNonQuery();

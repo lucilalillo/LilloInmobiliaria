@@ -19,6 +19,8 @@ namespace LilloInmobiliaria.Models
 
         public String Email { get; set; }
 
+        public String ClaveInq { get; set; }
+
         public override string ToString()
         {
             return $"{IdInquilino} {Nombre} {Apellido} {Dni} {Telefono} {Email}";
