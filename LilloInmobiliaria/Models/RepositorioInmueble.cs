@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace LilloInmobiliaria.Models
 {
-    public class RepositorioInmbueble : RepositorioBase, IRepositorio<Inmueble>
+    public class RepositorioInmueble : RepositorioBase
     {
-        public RepositorioInmbueble(IConfiguration configuration) : base(configuration)
+        public RepositorioInmueble(IConfiguration configuration) : base(configuration)
         {
         }
 
@@ -19,19 +19,20 @@ namespace LilloInmobiliaria.Models
             int res = -1;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string sql = $"INSERT INTO Inmuebles (Prop, Direccion, CantAmbientes, Uso, Tipo, Precio) " +
-                    $"VALUES (@prop, @direccion, @cantambientes, @uso, @tipo, @precio);" +
+                string sql = $"INSERT INTO Inmuebles (IdInmueble, PropietarioId, Direccion, CantAmbientes, Uso, Tipo, Precio) " +
+                    $"VALUES (@idinmuebles, @propietarioid, @direccion, @cantambientes, @uso, @tipo, @precio);" +
                     $"SELECT SCOPE_IDENTITY();";
 
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
                     command.CommandType = CommandType.Text;
-                    command.Parameters.AddWithValue("@prop", p.Prop.IdPropietario);
+                    command.Parameters.AddWithValue("@idinmueble", p.IdInmueble);
+                    command.Parameters.AddWithValue("@propietarioid", p.PropietarioId);
                     command.Parameters.AddWithValue("@direccion", p.Direccion);
-                    command.Parameters.AddWithValue("@cantambientes",p.CantAmbientes);
+                    command.Parameters.AddWithValue("@cantambientes", p.CantAmbientes);
                     command.Parameters.AddWithValue("@uso", p.Uso);
-                    command.Parameters.AddWithValue("@tipo",p.Tipo);
-                    command.Parameters.AddWithValue("@precio",p.Precio);
+                    command.Parameters.AddWithValue("@tipo", p.Tipo);
+                    command.Parameters.AddWithValue("@precio", p.Precio);
                     connection.Open();
                     res = Convert.ToInt32(command.ExecuteScalar());
                     p.IdInmueble = res;
@@ -64,16 +65,16 @@ namespace LilloInmobiliaria.Models
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 string sql = $"UPDATE Inmuebles SET " +
-                    $"Prop=@prop, Direccion=@direccion, CantAmbientes=@cantambientes, Uso=@uso, Tipo=@tipo, Precio=@precio " +
+                    $"PropietarioId=@propietarioid, Direccion=@direccion, CantAmbientes=@cantambientes, Uso=@uso, Tipo=@tipo, Precio=@precio " +
                     $"WHERE IdInmueble = @idinmueble";
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
                     command.CommandType = CommandType.Text;
-                    command.Parameters.AddWithValue("@prop", p.Prop.IdPropietario);
+                    command.Parameters.AddWithValue("@propietarioid", p.PropietarioId);
                     command.Parameters.AddWithValue("@direccion", p.Direccion);
-                    command.Parameters.AddWithValue("@cantambientes",p.Direccion);
-                    command.Parameters.AddWithValue("@tipo", p.Tipo);
+                    command.Parameters.AddWithValue("@cantambientes", p.CantAmbientes);
                     command.Parameters.AddWithValue("@uso", p.Uso);
+                    command.Parameters.AddWithValue("@tipo", p.Tipo);
                     command.Parameters.AddWithValue("@precio", p.Precio);
                     command.Parameters.AddWithValue("@idinmueble", p.IdInmueble);
                     connection.Open();
@@ -89,7 +90,7 @@ namespace LilloInmobiliaria.Models
             Inmueble p = null;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string sql = $"SELECT IdInmueble, Prop, Direccion, CantAmbientes, Uso, Tipo, Precio FROM Inmuebles" +
+                string sql = $"SELECT IdInmueble, PropietarioId, Direccion, CantAmbientes, Uso, Tipo, Precio FROM Inmuebles" +
                     $" WHERE IdInmueble=@id";
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
@@ -102,11 +103,12 @@ namespace LilloInmobiliaria.Models
                         p = new Inmueble
                         {
                             IdInmueble = reader.GetInt32(0),
-                            Prop = reader.GetString(1),
+                            PropietarioId = reader.GetInt32(1),
                             Direccion = reader.GetString(2),
+                            CantAmbientes = reader.GetInt32(3),
                             Uso = reader.GetString(3),
                             Tipo = reader.GetString(4),
-                            Precio = (double)reader.GetDecimal(5),
+                            Precio = reader.GetDecimal(5),
                         };
                         return p;
                     }
@@ -115,12 +117,40 @@ namespace LilloInmobiliaria.Models
             }
             return p;
         }
-    }
-
 
         public IList<Inmueble> ObtenerTodos()
         {
-            
-        }
-    }
+            IList<Inmueble> res = new List<Inmueble>();
 
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                String sql = "SELECT IdInmueble, Direccion, CantAmbientes, Uso, Tipo, Precio, " +
+                    "p.Nombre, p.Apellido" +
+                    "FROM Inmuebles i INNER JOIN Propietarios p ON i.PropietarioId = p.IdPropietario";
+                using (SqlCommand command = new SqlCommand(sql, connection))
+                {
+                    command.CommandType = CommandType.Text;
+                    connection.Open();
+                    var reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        Inmueble p = new Inmueble
+                        {
+                            IdInmueble = reader.GetInt32(0),
+                            PropietarioId = reader.GetInt32(1),
+                            Direccion = reader.GetString(2),
+                            CantAmbientes = reader.GetInt32(3),
+                            Uso = reader.GetString(3),
+                            Tipo = reader.GetString(4),
+                            Precio = reader.GetDecimal(5),
+                        };
+                        res.Add(p);
+                    }
+                    connection.Close();
+                }
+            }
+            return res;
+        }
+
+    }
+}

@@ -10,10 +10,10 @@ namespace LilloInmobiliaria.Controllers
 {
     public class InmuebleController : Controller
     {
-        private readonly RepositorioInmbueble repositorio;
+        private readonly RepositorioInmueble repositorio;
         private readonly IRepositorioPropietario repoPropietario;
 
-        public InmuebleController(RepositorioInmbueble repositorio, IRepositorioPropietario repoPropietario) {
+        public InmuebleController(RepositorioInmueble repositorio, IRepositorioPropietario repoPropietario) {
             this.repositorio = repositorio;
             this.repoPropietario = repoPropietario;
         }
@@ -21,8 +21,20 @@ namespace LilloInmobiliaria.Controllers
         // GET: InmuebleController
         public ActionResult Index()
         {
-            var lista = repositorio
-            return View();
+            try
+            {
+                var lista = repositorio.ObtenerTodos();
+                ViewBag.Id = TempData["Id"];
+                if (TempData.ContainsKey("Mensaje"))
+                    ViewBag.Mensaje = TempData["Mensaje"];
+                return View(lista);
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = ex.Message;
+                ViewBag.StackTrate = ex.StackTrace;
+                return View();
+            }
         }
 
         // GET: InmuebleController/Details/5
