@@ -13,9 +13,10 @@ namespace LilloInmobiliaria.Models
         public int IdInmueble { get; set; }
         
         public Propietario Prop { get; set; }
-
-        public int PropietarioId { get; set; }
+        
         [ForeignKey(nameof(PropietarioId))]
+        [Display(Name = "Dueño")]
+        public int PropietarioId { get; set; }
 
         [Required]
         public String Direccion { get; set; }
@@ -31,6 +32,8 @@ namespace LilloInmobiliaria.Models
 
         [Required]
         public decimal Precio { get; set; }
+
+        public String Estado { get; set; }
 
         public override string ToString()
         {

@@ -1,6 +1,7 @@
 ﻿using LilloInmobiliaria.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,14 +9,14 @@ using System.Threading.Tasks;
 
 namespace LilloInmobiliaria.Controllers
 {
-    public class InmuebleController : Controller
+    public class InmueblesController : Controller
     {
         private readonly RepositorioInmueble repositorio;
-        private readonly IRepositorioPropietario repoPropietario;
+        private readonly RepositorioPropietario repoPropietario;
 
-        public InmuebleController(RepositorioInmueble repositorio, IRepositorioPropietario repoPropietario) {
-            this.repositorio = repositorio;
-            this.repoPropietario = repoPropietario;
+        public InmueblesController(IConfiguration configuration) {
+            this.repositorio = new RepositorioInmueble(configuration);
+            this.repoPropietario = new RepositorioPropietario(configuration) ;
         }
 
         // GET: InmuebleController
