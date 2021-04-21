@@ -92,7 +92,7 @@ namespace LilloInmobiliaria.Models
             Inmueble p = null;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string sql = $" SELECT IdInmueble, Direccion, CantAmbientes, Uso, Tipo, Precio, Estado, IdPropietario " +
+                string sql = $" SELECT IdInmueble, Direccion, CantAmbientes, Uso, Tipo, Precio, Estado, IdPropietario, " +
                     "p.Nombre, p.Apellido " + 
                     " FROM Inmuebles i INNER JOIN Propietarios p ON i.PropietarioId = i.Idpropietario " +
                     $" WHERE IdInmueble=@id";
@@ -136,8 +136,8 @@ namespace LilloInmobiliaria.Models
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                String sql = " SELECT IdInmueble, Direccion, CantAmbientes, Uso, Tipo, Precio, Estado, IdPropietario " +
-                    "p.Nombre, p.Apellido " +
+                String sql = $"SELECT IdInmueble, Direccion, CantAmbientes, Uso, Tipo, Precio, Estado, IdPropietario, "+
+                    " p.Nombre, p.Apellido " +
                     " FROM Inmuebles i INNER JOIN Propietarios p ON i.PropietarioId = p.IdPropietario ";
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {

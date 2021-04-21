@@ -13,30 +13,35 @@ namespace LilloInmobiliaria.Controllers
     {
         private readonly RepositorioInmueble repositorio;
         private readonly RepositorioPropietario repoPropietario;
+        protected readonly IConfiguration config;
 
         public InmueblesController(IConfiguration configuration) {
+
+            this.config = configuration;
             this.repositorio = new RepositorioInmueble(configuration);
             this.repoPropietario = new RepositorioPropietario(configuration) ;
         }
 
         // GET: InmuebleController
         public ActionResult Index()
-        {
-            try
-            {
-                var lista = repositorio.ObtenerTodos();
-                ViewBag.Id = TempData["Id"];
+        { 
+                try
+                {
+                    var lista = repositorio.ObtenerTodos();
+                    ViewBag.Id = TempData["Id"];
                 if (TempData.ContainsKey("Mensaje"))
+                {
                     ViewBag.Mensaje = TempData["Mensaje"];
-                return View(lista);
+                }
+                    return View(lista);
+                }
+                catch (Exception ex)
+                {
+                    ViewBag.Error = ex.Message;
+                    ViewBag.StackTrate = ex.StackTrace;
+                    return View();
+                }
             }
-            catch (Exception ex)
-            {
-                ViewBag.Error = ex.Message;
-                ViewBag.StackTrate = ex.StackTrace;
-                return View();
-            }
-        }
 
         // GET: InmuebleController/Details/5
         public ActionResult Details(int id)

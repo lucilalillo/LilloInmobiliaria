@@ -9,6 +9,7 @@ namespace LilloInmobiliaria.Models
 {
     public class Inmueble
     {
+        [Key]
         [Display(Name ="Codigo")]
         public int IdInmueble { get; set; }
         
@@ -37,7 +38,7 @@ namespace LilloInmobiliaria.Models
 
         public override string ToString()
         {
-            return $"{Prop.Nombre} {Prop.Apellido} {Direccion} {CantAmbientes} {Uso} {Tipo} {Precio}";
+            return $"{Prop.Nombre} {Prop.Apellido} {Direccion} {CantAmbientes} {Uso} {Tipo} {Precio} {Estado}";
         }
     }
 }
