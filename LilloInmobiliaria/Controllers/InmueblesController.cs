@@ -1,4 +1,4 @@
-﻿using LilloInmobiliaria.Models;
+﻿  using LilloInmobiliaria.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -46,7 +46,9 @@ namespace LilloInmobiliaria.Controllers
         // GET: InmuebleController/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            Inmueble inmu = new Inmueble();
+            inmu = repositorio.ObtenerPorId(id);
+            return View(inmu);
         }
 
         // GET: InmuebleController/Create
@@ -58,14 +60,17 @@ namespace LilloInmobiliaria.Controllers
         // POST: InmuebleController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(Inmueble inmueble)
         {
             try
             {
+                repositorio.Alta(inmueble);
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception ex)
             {
+                ViewBag.Error = ex.Message;
+                ViewBag.StackTrate = ex.StackTrace;
                 return View();
             }
         }
@@ -73,42 +78,66 @@ namespace LilloInmobiliaria.Controllers
         // GET: InmuebleController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            var i = repositorio.ObtenerPorId(id);
+            if (TempData.ContainsKey("Mensaje"))
+                ViewBag.Mensaje = TempData["Mensaje"];
+            if (TempData.ContainsKey("Error"))
+                ViewBag.Error = TempData["Error"];
+            return View(i);
         }
 
         // POST: InmuebleController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, Inmueble inmu)
         {
             try
             {
+                inmu.IdInmueble = id;
+                repositorio.Modificacion(inmu);
+                TempData["id"] = "Se actualizo el inmueble";
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception ex)
             {
+                ViewBag.Error = ex.Message;
+                ViewBag.StackTrate = ex.StackTrace;
                 return View();
             }
+
         }
 
         // GET: InmuebleController/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            var p = repositorio.ObtenerPorId(id);
+            return View(p);
         }
 
         // POST: InmuebleController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(int id, Inmueble inmu)
         {
             try
             {
+                repositorio.Baja(id);
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                if (ex.Message.StartsWith("The DELETE statement conflicted with the REFERENCE"))
+                {
+                    Inmueble p = repositorio.ObtenerPorId(id);
+                    ViewBag.lugar = p.Prop.Nombre + " " + p.Prop.Apellido + " en " + p.Direccion;
+                    ViewBag.Error = "No se puede eliminar el inmueble porque tiene contratos vigentes";
+                }
+                else
+                {
+                    ViewBag.Error = ex.Message;
+                    ViewBag.StackTrate = ex.StackTrace;
+                }
+                return View(inmu);
             }
         }
     }

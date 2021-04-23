@@ -22,13 +22,13 @@ namespace LilloInmobiliaria.Models
         [Required]
         public String Direccion { get; set; }
 
-        [Required]
+        [Required, Display(Name = "Cantidad de Ambientes")]
         public int CantAmbientes { get; set; }
 
         [Required]
         public String Uso { get; set; }
 
-        [Required]
+        [Required, ]
         public String Tipo { get; set; }
 
         [Required]

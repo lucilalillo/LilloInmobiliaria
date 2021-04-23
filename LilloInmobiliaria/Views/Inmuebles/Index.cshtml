@@ -40,7 +40,7 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Prop.Nombre + " " + item.Prop.Apellido)
+                @(item.Prop.Nombre + " " + item.Prop.Apellido)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Direccion)
