@@ -111,7 +111,7 @@ namespace LilloInmobiliaria.Models
                             Uso = reader.GetString(3),
                             Tipo = reader.GetString(4),
                             Precio = reader.GetDecimal(5),
-                            Estado = reader.GetString(6),
+                            Estado = reader.GetBoolean(6),
                             PropietarioId = reader.GetInt32(7),
                             Prop = new Propietario
                             {
@@ -137,7 +137,7 @@ namespace LilloInmobiliaria.Models
             {
                 String sql = $"SELECT IdInmueble, Direccion, CantAmbientes, Uso, Tipo, Precio, Estado, IdPropietario, "+
                     " p.Nombre, p.Apellido " +
-                    " FROM Inmuebles i INNER JOIN Propietarios p ON i.PropietarioId = p.IdPropietario ";
+                    " FROM Inmuebles i INNER JOIN propietarios p ON i.PropietarioId = p.IdPropietario ";
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
                     command.CommandType = CommandType.Text;
@@ -153,7 +153,7 @@ namespace LilloInmobiliaria.Models
                             Uso = reader.GetString(3),
                             Tipo = reader.GetString(4),
                             Precio = reader.GetDecimal(5),
-                            Estado = reader.GetString(6),
+                            Estado = reader.GetBoolean(6),
                             PropietarioId = reader.GetInt32(7),
                             Prop = new Propietario
                             {

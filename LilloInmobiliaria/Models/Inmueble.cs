@@ -34,7 +34,7 @@ namespace LilloInmobiliaria.Models
         [Required]
         public decimal Precio { get; set; }
 
-        public String Estado { get; set; }
+        public bool Estado { get; set; }
 
         public override string ToString()
         {

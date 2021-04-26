@@ -31,7 +31,7 @@ namespace LilloInmobiliaria.Models
 					using (SqlCommand command = new SqlCommand(sql, connection))
 					{
 						command.CommandType = CommandType.Text;
-						command.Parameters.AddWithValue("@idInmueble", c.Inmueble);
+						command.Parameters.AddWithValue("@idInmueble", c.InmuebleId);
 						command.Parameters.AddWithValue("@idInquilino", c.InquilinoId);
 						command.Parameters.AddWithValue("@fechaInicio", c.FecInicio);
 						command.Parameters.AddWithValue("@fechaFin", c.FecFin);
@@ -68,13 +68,10 @@ namespace LilloInmobiliaria.Models
 				using (SqlConnection connection = new SqlConnection(connectionString))
 				{
 					string sql = $"UPDATE Contratos SET InmuebleId=@idInmueble, InquilinoId=@idInquilino, FecInicio=@fechaInicio, FecFin=@fechaFin, Monto=@monto, Estado=@estado " +
-						$"WHERE IdContrato = @idContrato";
+						$" WHERE IdContrato = @idContrato";
 					using (SqlCommand command = new SqlCommand(sql, connection))
 					{
-
-
-
-						command.CommandType = CommandType.Text;
+                        command.CommandType = CommandType.Text;
 						command.Parameters.AddWithValue("@idInmueble", c.InmuebleId);
 						command.Parameters.AddWithValue("@idInquilino", c.InquilinoId);
 						command.Parameters.AddWithValue("@fechaInicio", c.FecInicio);
@@ -97,17 +94,15 @@ namespace LilloInmobiliaria.Models
 				IList<Contrato> res = new List<Contrato>();
 				using (SqlConnection connection = new SqlConnection(connectionString))
 				{
-					string sql = $"SELECT IdContrato, InmuebleId,InquilinoId,FecInicio, FecFin, Monto, c.Estado, inq.Nombre, inq.Apellido , i.Direccion " +
+					string sql = $"SELECT IdContrato, InmuebleId, InquilinoId, FecInicio, FecFin, Monto, "+
+					    " c.Estado, inq.Nombre, inq.Apellido , i.Direccion " +
 						$" FROM Contratos c INNER JOIN Inmuebles i ON c.InmuebleId = i.IdInmueble " +
-						$"INNER JOIN Inquilinos inq ON c.InquilinoId = inq.IdInquilino ";
-
-
-
-					using (SqlCommand command = new SqlCommand(sql, connection))
+						$" INNER JOIN Inquilinos inq ON c.InquilinoId = inq.IdInquilinos ";
+                    using (SqlCommand command = new SqlCommand(sql, connection))
 					{
 						command.CommandType = CommandType.Text;
 						connection.Open();
-						var reader = command.ExecuteReader();
+					    var reader = command.ExecuteReader();
 						while (reader.Read())
 						{
 							Contrato c = new Contrato
@@ -119,22 +114,18 @@ namespace LilloInmobiliaria.Models
 								FecFin = reader.GetDateTime(4),
 								Monto = reader.GetDecimal(5),
 								Estado = reader.GetBoolean(6),
-								Inmueble = new Inmueble
-								{
-									IdInmueble = reader.GetInt32(1),
-									Direccion = reader.GetString(7),
-
-								},
 								Inquilino = new Inquilino
 								{
 									IdInquilino = reader.GetInt32(2),
-									Nombre = reader.GetString(8),
-									Apellido = reader.GetString(9),
-
-
-
+									Nombre = reader.GetString(7),
+									Apellido = reader.GetString(8),
+								},
+								Inmueble = new Inmueble
+								{
+									IdInmueble = reader.GetInt32(1),
+									Direccion = reader.GetString(9),
 								}
-							};
+								};
 							res.Add(c);
 						}
 						connection.Close();
@@ -278,7 +269,7 @@ namespace LilloInmobiliaria.Models
 				}
 				return res;
 			}
-			public IList<Contrato> ObtenerTodosVigentes(DateTime fechaInicio, DateTime fechaFin)
+			public IList<Contrato> ObtenerContratosVigentes(DateTime fechaInicio, DateTime fechaFin)
 			{
 				IList<Contrato> res = new List<Contrato>();
 				using (SqlConnection connection = new SqlConnection(connectionString))

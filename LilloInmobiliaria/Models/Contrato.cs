@@ -13,14 +13,14 @@ namespace LilloInmobiliaria.Models
         [DisplayName("Codigo")]
         public int IdContrato { get; set; }
 
-        [Required, DisplayName("Dueño")]
         public Inmueble Inmueble { get; set; }
 
+        [Required, DisplayName("Dueño")]
         public int InmuebleId { get; set; }
 
-        [Required, DisplayName("Inquilino")]
         public Inquilino Inquilino { get; set; }
 
+        [Required, DisplayName("Inquilino")]
         public int InquilinoId { get; set; }
 
         [Required, DisplayName("Fecha Inicio Contrato")]
